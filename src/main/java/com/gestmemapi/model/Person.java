@@ -22,10 +22,10 @@ public class Person implements Serializable{
 	@Column(name = "PERSON_ID", updatable = false, nullable = false)
     private Long id;
 
-	@Column(name = "FIRSTNAME", unique=false, insertable=true, updatable=true, nullable=false)
+	@Column(name = "FIRSTNAME", insertable=true, updatable=true, nullable=false)
     private String firstName;
 
-	@Column(name = "LASTNAME", unique=false, insertable=true, updatable=true, nullable=false)
+	@Column(name = "LASTNAME", insertable=true, updatable=true, nullable=false)
     private String lastName;
 
 	@Column(name = "MATRICULE", unique=true, insertable=true, updatable=true, nullable=false)
@@ -41,7 +41,7 @@ public class Person implements Serializable{
 	private Integer personActive;
 	
 	@ManyToOne
-    @JoinColumn(name = "ROLE_ID", nullable=false)
+    @JoinColumn(name = "ROLE_ID", insertable=true, updatable = true, nullable=false)
     private Role role;
 
     public Person() {
