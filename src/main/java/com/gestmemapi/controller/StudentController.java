@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gestmemapi.model.Person;
 import com.gestmemapi.service.PersonService;
 
-@CrossOrigin(origins = "http://localhost:9000", maxAge = 3600)
+@CrossOrigin(origins = "https://gestmem-api.herokuapp.com", maxAge = 3600)
 @RestController
 @RequestMapping("/student/*")
 public class StudentController {
