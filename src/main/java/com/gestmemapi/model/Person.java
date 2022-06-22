@@ -50,6 +50,10 @@ public class Person implements Serializable{
     	super();
     }
 
+    public Person(Long id) {
+        this.id = id;
+    }
+    
     public Person(String email, String password) {
         this.email = email;
         this.password = password;

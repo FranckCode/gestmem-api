@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "DOCUMENT")
 public class Document implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +30,10 @@ public class Document implements Serializable{
 	@Column(name = "IS_PUBLISHED", insertable=true, updatable=true, nullable=false)
     private Integer isPublished;
 
-	@Column(name = "ADDED_DATE", unique=true, insertable=true, updatable=true, nullable=false)
+	@Column(name = "ADDED_DATE", insertable=true, updatable=true, nullable=false)
     private Date addedDate;
 
-	@Column(name = "UPDATED_DATE", unique=true, insertable=true, updatable=true, nullable=false)
+	@Column(name = "UPDATED_DATE", insertable=true, updatable=true, nullable=false)
     private Date updatedDate;
 	
 	@Column(name = "TITLE", insertable=true, updatable=true, nullable=false)
@@ -46,8 +46,14 @@ public class Document implements Serializable{
     private String name;
 
     @Lob
-	@Column(name = "DATA", unique=true, insertable=true, updatable=true, nullable=false)
+	@Column(name = "DATA", insertable=true, updatable=true, nullable=false)
     private byte[] data;
+
+    @Column(name = "TYPE", insertable=true, updatable = true, nullable=false)
+	private String type;
+
+    @Column(name = "SIZE", insertable=true, updatable = true, nullable=false)
+	private Long size;
 
 	@ManyToOne(
 		// cascade = CascadeType.ALL
@@ -69,6 +75,8 @@ public class Document implements Serializable{
 
     public Document() {
     	super();
+        this.title = "Unknown title";
+        this.summary = "Unknown summary";
     }
     
     public Document(Long id, Integer isValidated, Integer isPublished, String title, String summary, String name,
@@ -80,6 +88,19 @@ public class Document implements Serializable{
         this.summary = summary;
         this.name = name;
         this.data = data;
+    }
+    
+    public Document(String title, String summary, String name, byte[] data, String type, Person student, Person supervisor,
+            Speciality speciality) {
+        this.title = title;
+        this.summary = summary;
+        this.name = name;
+        this.data = data;
+        this.type = type;
+        this.student = student;
+        this.supervisor = supervisor;
+        this.speciality = speciality;
+        this.size = Long.valueOf(this.data.length);
     }
 
     public Long getId() {
@@ -177,5 +198,30 @@ public class Document implements Serializable{
     public void setSpeciality(Speciality speciality) {
         this.speciality = speciality;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "Document [addedDate=" + addedDate + ", id=" + id + ", isPublished=" + isPublished + ", isValidated="
+                + isValidated + ", name=" + name + ", size=" + size + ", speciality=" + speciality + ", student="
+                + student + ", summary=" + summary + ", supervisor=" + supervisor + ", title=" + title + ", type="
+                + type + ", updatedDate=" + updatedDate + "]";
+    }
+    
     
 }
