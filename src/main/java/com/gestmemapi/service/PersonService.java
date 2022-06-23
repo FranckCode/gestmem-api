@@ -45,32 +45,17 @@ public class PersonService implements IPersonService {
 		return personRepository.findAll();
 	}	
 	
-	//fonction qui renvoie une personne en fonction de son id
-	@Override
-	public Optional<Person> getPersonById(Long id) throws BusinessResourceException {
-		Optional<Person> PersonFound = personRepository.findById(id);
-		if (Boolean.FALSE.equals(PersonFound.isPresent())){
-			throw new BusinessResourceException("Person Not Found", "Aucun utilisateur avec ce identifiant :");
-		}
-				return PersonFound;
-	}
 
 	@Override
 	@Transactional(readOnly=false)
 	public Person saveOrUpdatePerson(Person person) throws BusinessResourceException{
-		// Person savedPerson = new Person();
-		// savedPerson.setEmail(person.getEmail());
-		// savedPerson.setFirstName(person.getFirstName());
-		// savedPerson.setLastName(person.getLastName());
-		// savedPerson.setMatricule(person.getMatricule());
-		// savedPerson.setRole(person.getRole());
 		try{
 			if(null == person.getId()) {
-				//pas d'Id --> création d'un Person
+				//pas d'Id --> création d'une Person
 				addPersonRole(person);	//Ajout d'un rôle par défaut
 				person.setPassword(bCryptPasswordEncoder.encode(person.getPassword()));
 			} else {
-				//sinon, mise à jour d'un Person
+				//sinon, mise à jour d'une Person
 				Optional<Person> PersonFromDB = getPersonById(person.getId());
 				if(! bCryptPasswordEncoder.matches(person.getPassword(), PersonFromDB.get().getPassword())) {
 					person.setPassword(bCryptPasswordEncoder.encode(person.getPassword()));//MAJ du mot de passe s'il a été modifié
@@ -105,6 +90,16 @@ public class PersonService implements IPersonService {
 		else{
 			throw new BusinessResourceException("SearchRoleError", "Ce Role n'existe pas",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	//fonction qui renvoie une personne en fonction de son id
+	@Override
+	public Optional<Person> getPersonById(Long id) throws BusinessResourceException {
+		Optional<Person> PersonFound = personRepository.findById(id);
+		if (Boolean.FALSE.equals(PersonFound.isPresent())){
+			throw new BusinessResourceException("Person Not Found", "Aucun utilisateur avec ce identifiant :");
+		}
+				return PersonFound;
 	}
 
 	@Override
