@@ -1,6 +1,7 @@
 package com.gestmemapi.controller;
 
-
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -158,7 +159,29 @@ public class DocumentController {
             .body(document);
     }*/
 
+
     @GetMapping("/documents")
+    public ResponseEntity<List<ResponseFile>> getListDocuments() {
+        List<ResponseFile> documents = documentService.getAllDocuments().map(dbFile -> {
+            String fileDownloadUri = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/documents/")
+                .path(dbFile.getId().toString())
+                .toUriString();
+            /*return new ResponseFile(
+                dbFile.getName(),
+                fileDownloadUri,
+                dbFile.getType(),
+                Long.valueOf(dbFile.getData().length));*/
+
+            return new ResponseFile(dbFile.getId(), dbFile.getIsValidated(), dbFile.getIsPublished(), dbFile.getAddedDate(), dbFile.getUpdatedDate(), dbFile.getTitle(), dbFile.getSummary(), dbFile.getName(), dbFile.getType(), dbFile.getSize(), fileDownloadUri, dbFile.getStudent(), dbFile.getSupervisor(), dbFile.getSpeciality());
+            
+        }).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(documents);
+    }
+
+
+    @GetMapping("/document")
     public ResponseEntity<ResponseFile> getDocumentById(@RequestParam int id) {
         Document document = documentService.getDocument(Long.valueOf(id));
 

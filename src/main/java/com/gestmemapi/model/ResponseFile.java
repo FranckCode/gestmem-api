@@ -40,6 +40,32 @@ public class ResponseFile {
         this.id = id;
     }
 
+    public ResponseFile(String name, String url, String type, Long size) {
+        this.name = name;
+        this.type = type;
+        this.size = size;
+        this.url = url;
+    }
+    
+    public ResponseFile(Long id, Integer isValidated, Integer isPublished, Date addedDate, Date updatedDate,
+            String title, String summary, String name, String type, Long size, String url, Person student,
+            Person supervisor, Speciality speciality) {
+        this.id = id;
+        this.isValidated = isValidated;
+        this.isPublished = isPublished;
+        this.addedDate = addedDate;
+        this.updatedDate = updatedDate;
+        this.title = title;
+        this.summary = summary;
+        this.name = name;
+        this.type = type;
+        this.size = size;
+        this.url = url;
+        this.student = student;
+        this.supervisor = supervisor;
+        this.speciality = speciality;
+    }
+
     public Long getId() {
         return id;
     }

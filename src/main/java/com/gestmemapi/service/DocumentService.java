@@ -85,8 +85,8 @@ public class DocumentService implements IDocumentService {
   }
 
   @Override
-  public Iterable<Document> getAllDocuments() {
-    return documentRepository.findAll();
+  public Stream<Document> getAllDocuments() {
+    return documentRepository.findAll().stream();
   }
 
 }

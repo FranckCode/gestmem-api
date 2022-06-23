@@ -13,5 +13,5 @@ public interface IDocumentService {
 
     Document getDocument(Long id);
 
-    Iterable<Document> getAllDocuments();
+    Stream<Document> getAllDocuments();
 }
