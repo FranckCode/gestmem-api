@@ -9,7 +9,7 @@ import com.gestmemapi.model.Document;
 
 public interface IDocumentService {
     
-    Document store(MultipartFile file, Document document) throws IOException;
+    Document store(Document document) throws IOException;
 
     Document getDocument(Long id);
 

@@ -1,6 +1,7 @@
 package com.gestmemapi.controller;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,52 +59,44 @@ public class DocumentController {
 	
 	//controlleur pour la récupération de tous les utilisateurs
 	//@PostMapping(value="/documents", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
-    @PostMapping(value = "/documents", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestPart("file") MultipartFile file){
+    @PostMapping(value = "/document")
+    @Transactional
+    public ResponseEntity<ResponseMessage> uploadFile(@RequestBody Document document){
 
-        System.out.println("Upload document to api method");
+        System.out.println("pload file controller");
+        
+        String message = "";
+        
+        try {
 
-        String body = "MultipartFile exists";
-        if (file == null) {
-            body = "Null MultipartFile";
-        }
-        else{
+            /*byte[] b = new byte[20];
+            new Random().nextBytes(b);
 
-            String message = "";
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            System.out.println("b: ");
+            System.out.println(b);
+
+            document.setData(b);
+            System.out.println("document.getData: ");
+            System.out.println(document.getData());
+
+            Document myDocument = new Document(document);
+            */
+            System.out.println("My document in the controller");
+            System.out.println(document);
             
-            try {
-                
-                Person student = personRepository.findById(Long.valueOf(1)).get();
-                Person supervisor = personRepository.findById(Long.valueOf(2)).get();
 
-                Speciality speciality = specialityRepository.findById(Long.valueOf(1)).get();
+            Document uploadedDocument = documentService.store(document);
 
-                Document myDocument = new Document();
-                myDocument.setTitle("Unknown");
-                myDocument.setSummary("Unknown");
-                myDocument.setStudent(student);
-                myDocument.setSupervisor(supervisor);
-                myDocument.setSpeciality(speciality);
-                
-                System.out.println(myDocument);
+            message = "Uploaded the file successfully: " + document.getName();
 
-                Document uploadedDocument = documentService.store(file, myDocument);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 
-                
+          } catch (IOException e) {
 
-                message = "Uploaded the file successfully: " + fileName;
+            message = "Could not upload the file: " + document.getName() + "!" + e.toString();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
 
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-
-            } catch (Exception e) {
-                message = "Could not upload the file: " + fileName + ", file type: " + file.getContentType() + "!,  exception:  " + e.toString();
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-            }
-            
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(body));
+          }
 
     }
 
@@ -165,7 +159,7 @@ public class DocumentController {
         List<ResponseFile> documents = documentService.getAllDocuments().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/documents/")
+                .path("/")
                 .path(dbFile.getId().toString())
                 .toUriString();
             /*return new ResponseFile(
@@ -187,7 +181,7 @@ public class DocumentController {
 
         String fileDownloadUri = ServletUriComponentsBuilder
             .fromCurrentContextPath()
-            .path("/documents/")
+            .path("/")
             .path(document.getId().toString())
             .toUriString();
 

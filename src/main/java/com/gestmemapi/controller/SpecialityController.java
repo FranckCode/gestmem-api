@@ -27,7 +27,7 @@ public class SpecialityController {
 	@GetMapping(value = "/specialities")
 	public ResponseEntity<Iterable<Speciality>> getAllSpecialities() {
 		Iterable<Speciality> specialities = specialityService.getAllSpecialities();
-		return new ResponseEntity<Iterable<Speciality>>(specialities, HttpStatus.FOUND);
+		return new ResponseEntity<Iterable<Speciality>>(specialities, HttpStatus.OK);
 	}
 	
 }

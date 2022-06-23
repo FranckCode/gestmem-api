@@ -29,11 +29,20 @@ public class Speciality implements Serializable{
 	
 	public Speciality(Long id) {
         this.id = id;
+        this.specialityName = null;
     }
     
-    public Speciality(String specialityName) {
-        this.specialityName = specialityName;
-    }
+    public Speciality(String specialityName){
+		super();
+		this.id = null;
+		this.specialityName = specialityName;
+	}
+
+	public Speciality(Speciality speciality){
+		super();
+		this.id = speciality.id;
+		this.specialityName = null;
+	}
 
     public Long getId() {
         return id;

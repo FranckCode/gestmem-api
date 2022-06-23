@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "DOCUMENT")
 public class Document implements Serializable{
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,8 +75,7 @@ public class Document implements Serializable{
 
     public Document() {
     	super();
-        this.title = "Unknown title";
-        this.summary = "Unknown summary";
+        System.out.println("Constructeur numero 1 de la classe document");
     }
     
     public Document(Long id, Integer isValidated, Integer isPublished, String title, String summary, String name,
@@ -88,8 +87,23 @@ public class Document implements Serializable{
         this.summary = summary;
         this.name = name;
         this.data = data;
+        this.size = Long.valueOf(1);
+        System.out.println("Constructeur numero 2 de la classe document");
     }
     
+    public Document(String title, String summary, String name, String type, Person student, Person supervisor,
+            Speciality speciality) {
+        this.title = title;
+        this.summary = summary;
+        this.name = name;
+        this.type = type;
+        this.student = student;
+        this.supervisor = supervisor;
+        this.speciality = speciality;
+        this.size = Long.valueOf(1);
+        System.out.println("Constructeur numero 3 de la classe document");
+    }
+
     public Document(String title, String summary, String name, byte[] data, String type, Person student, Person supervisor,
             Speciality speciality) {
         this.title = title;
@@ -100,7 +114,32 @@ public class Document implements Serializable{
         this.student = student;
         this.supervisor = supervisor;
         this.speciality = speciality;
+        this.size = Long.valueOf(data.length);
+        Long millis = System.currentTimeMillis();
+        this.addedDate = new Date(millis);
+        this.updatedDate = new Date(millis);
         this.size = Long.valueOf(this.data.length);
+        this.isPublished = 0;
+        this.isValidated = 0;
+        System.out.println("Constructeur numero 4 de la classe document");
+    }
+
+    public Document(Document document){
+        this.title = document.getTitle();
+        this.summary = document.getSummary();
+        this.name = document.getName();
+        this.data = document.getData();
+        this.type = document.getType();
+        this.student = document.getStudent();
+        this.supervisor = document.getSupervisor();
+        this.speciality = document.getSpeciality();
+        Long millis = System.currentTimeMillis();
+        this.addedDate = new Date(millis);
+        this.updatedDate = new Date(millis);
+        this.size = Long.valueOf(data.length);
+        this.isPublished = 0;
+        this.isValidated = 0;
+        System.out.println("Constructeur numero 5 de la classe document");
     }
 
     public Long getId() {
@@ -218,7 +257,7 @@ public class Document implements Serializable{
     @Override
     public String toString() {
         return "Document [addedDate=" + addedDate + ", id=" + id + ", isPublished=" + isPublished + ", isValidated="
-                + isValidated + ", name=" + name + ", size=" + size + ", speciality=" + speciality + ", student="
+                + isValidated + ", name="  + name  + ", data="  + data + ", size=" + size + ", speciality=" + speciality + ", student="
                 + student + ", summary=" + summary + ", supervisor=" + supervisor + ", title=" + title + ", type="
                 + type + ", updatedDate=" + updatedDate + "]";
     }
