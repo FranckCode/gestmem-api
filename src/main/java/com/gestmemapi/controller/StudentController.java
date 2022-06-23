@@ -23,7 +23,7 @@ public class StudentController {
 	@GetMapping(value = "/students")
 	public ResponseEntity<Iterable<Person>> getAllUsers() {
 		Iterable<Person> students = studentService.getAllStudents();
-		return new ResponseEntity<Iterable<Person>>(students, HttpStatus.FOUND);
+		return new ResponseEntity<Iterable<Person>>(students, HttpStatus.OK);
 	}
 	
 }

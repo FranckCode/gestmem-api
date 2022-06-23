@@ -25,7 +25,7 @@ public class SupervisorController {
 	@GetMapping(value = "/supervisors")
 	public ResponseEntity<Iterable<Person>> getAllUsers() {
 		Iterable<Person> supervisors = supervisorService.getAllSupervisors();
-		return new ResponseEntity<Iterable<Person>>(supervisors, HttpStatus.FOUND);
+		return new ResponseEntity<Iterable<Person>>(supervisors, HttpStatus.OK);
 	}
 	
 }

@@ -24,7 +24,7 @@ public class LibrarianController {
 	@GetMapping(value = "/librarians")
 	public ResponseEntity<Iterable<Person>> getAllUsers() {
 		Iterable<Person> librarians = librarianService.getAllLibrarians();
-		return new ResponseEntity<Iterable<Person>>(librarians, HttpStatus.FOUND);
+		return new ResponseEntity<Iterable<Person>>(librarians, HttpStatus.OK);
 	}
 	
 }
