@@ -59,12 +59,13 @@ public class Person implements Serializable{
         this.password = password;
     }
 
-    public Person(String firstName, String lastName, String matricule, String email, String password) {
+    public Person(String firstName, String lastName, String matricule, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.matricule = matricule;
         this.email = email;
         this.password = password;
+        this.role = new Role(role);
     }
     
 	public Person(Long id, String firstName, String lastName, String matricule, String email, String password, Integer personActive) {

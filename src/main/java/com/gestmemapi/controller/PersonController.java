@@ -40,31 +40,28 @@ public class PersonController {
 	@PostMapping(value = "/person")
 	@Transactional
 	public ResponseEntity<Person> saveUser(@RequestBody Person person) {
-		System.out.println(person);
 		Person personSaved = personService.saveOrUpdatePerson(person);		
  		return new ResponseEntity<Person>(personSaved, HttpStatus.CREATED);
  	}
 
-	 // controller pour la mise à jour d'un utilisateur
-	 @PutMapping(value = "/person")
-	 public ResponseEntity<Person> updateUser(@RequestBody Person person) {
-		 Person personSaved = personService.saveOrUpdatePerson(person);		
-		  return new ResponseEntity<Person>(personSaved, HttpStatus.CREATED);
-	  }
+	// controller pour la mise à jour d'un utilisateur
+	@PutMapping(value = "/person")
+	public ResponseEntity<Person> updateUser(@RequestBody Person person) {
+		Person personSaved = personService.saveOrUpdatePerson(person);		
+		return new ResponseEntity<Person>(personSaved, HttpStatus.CREATED);
+	}
 	  
-	  //controlleur pour la récupération de tous les utilisateurs
-	  @GetMapping(value = "/persons")
-	  public ResponseEntity<Iterable<Person>> getAllUsers() {
-		  Iterable<Person> persons = personService.getAllPersons();
-		  return new ResponseEntity<Iterable<Person>>(persons, HttpStatus.FOUND);
-	  }
+	//controlleur pour la récupération de tous les utilisateurs
+	@GetMapping(value = "/persons")
+	public ResponseEntity<Iterable<Person>> getAllUsers() {
+		Iterable<Person> persons = personService.getAllPersons();
+		return new ResponseEntity<Iterable<Person>>(persons, HttpStatus.OK);
+	}
 	  
-	  //controlleur pour la récupération de tous les utilisateurs
-	  @GetMapping(value = "/person")
-	  public ResponseEntity<Optional<Person>> getUserById(@RequestParam int id) {
-		  Optional<Person> myPerson = personService.getPersonById(Long.valueOf(id));
-		  return new ResponseEntity<Optional<Person>>(myPerson, HttpStatus.FOUND);
-	  }
-
-
+	//controlleur pour la récupération de tous les utilisateurs
+	@GetMapping(value = "/person")
+	public ResponseEntity<Optional<Person>> getUserById(@RequestParam int id) {
+		Optional<Person> myPerson = personService.getPersonById(Long.valueOf(id));
+		return new ResponseEntity<Optional<Person>>(myPerson, HttpStatus.FOUND);
+	}
 }
