@@ -9,21 +9,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gestmemapi.model.Person;
+import com.gestmemapi.service.LibrarianService;
 import com.gestmemapi.service.StudentService;
+import com.gestmemapi.service.SupervisorService;
 
 //@CrossOrigin(origins = "https://gestmem-api.herokuapp.com", maxAge = 3600)
 @RestController
 @RequestMapping("/*")
-public class StudentController {
+public class SupervisorController {
 
 	@Autowired
-	private StudentService studentService;	
+	private SupervisorService supervisorService;	
 	
 	//controlleur pour la récupération de tous les utilisateurs
-	@GetMapping(value = "/students")
+	@GetMapping(value = "/supervisors")
 	public ResponseEntity<Iterable<Person>> getAllUsers() {
-		Iterable<Person> students = studentService.getAllStudents();
-		return new ResponseEntity<Iterable<Person>>(students, HttpStatus.FOUND);
+		Iterable<Person> supervisors = supervisorService.getAllSupervisors();
+		return new ResponseEntity<Iterable<Person>>(supervisors, HttpStatus.FOUND);
 	}
 	
 }

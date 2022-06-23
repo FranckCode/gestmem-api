@@ -6,9 +6,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 import com.gestmemapi.model.Person;
+import com.gestmemapi.model.Role;
 
 @Repository
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
     Optional<Person> findByEmail(String email);
+
+    Iterable<Person> findAllById(Long id);
+
+    Iterable<Person> findAllByRole(Role role);
+
 }
