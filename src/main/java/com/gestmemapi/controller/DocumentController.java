@@ -59,11 +59,11 @@ public class DocumentController {
 	
 	//controlleur pour la récupération de tous les utilisateurs
 	//@PostMapping(value="/documents", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
-    @PostMapping(value = "/document")
+    @PostMapping(value = "/document", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     @Transactional
     public ResponseEntity<ResponseMessage> uploadFile(@RequestBody Document document){
 
-        System.out.println("pload file controller");
+        System.out.println("upload file controller");
         
         String message = "";
         

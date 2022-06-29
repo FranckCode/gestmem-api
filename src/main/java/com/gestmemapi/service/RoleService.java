@@ -29,7 +29,7 @@ public class RoleService implements IRoleService {
         Optional<Role> roleFound = roleRepository.findByRoleName(roleName);
 
         if (Boolean.FALSE.equals(roleFound.isPresent())){
-			throw new BusinessResourceException("Role Not Found", "Aucun role avec ce nom :");
+			throw new BusinessResourceException("Role Not Found", "Aucun role avec ce nom :" + roleName);
 		}
 
         return roleFound.get().getId();
@@ -39,6 +39,13 @@ public class RoleService implements IRoleService {
     public Iterable<Role> getAllRoles() {
         return roleRepository.findAll();
     }
+
+	@Override
+	public Optional<Role> getRole(String roleName) {
+		// TODO Auto-generated method stub
+		System.out.println("Role Name is: " + roleName);
+		return roleRepository.findById(getRoleId(roleName));
+	}
 	
 		
 		

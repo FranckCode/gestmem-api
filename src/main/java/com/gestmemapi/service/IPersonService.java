@@ -15,7 +15,7 @@ public interface IPersonService {
 	
 	Person saveOrUpdatePerson(Person person) throws BusinessResourceException;
 	
-	// void deletePerson(Long id) throws BusinessResourceException;
+	void deletePerson(Long id) throws BusinessResourceException;
 
 	Optional<Person> findByEmailAndPassword(String login, String password) throws BusinessResourceException;
 

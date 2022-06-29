@@ -125,5 +125,11 @@ public class PersonService implements IPersonService {
             throw new BusinessResourceException("Person Not Found", "L'utilisateur avec ce login n'existe pas :" + email);
         }
 		return PersonFound;
+	}
+
+	@Override
+	public void deletePerson(Long id) throws BusinessResourceException {
+		// TODO Auto-generated method stub
+		personRepository.deleteById(id);
 	}	
 }
