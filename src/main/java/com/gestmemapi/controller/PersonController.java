@@ -33,10 +33,10 @@ public class PersonController {
 
 	// controlleur pour l'authentification d'une personne
 	@PostMapping(value = "/login")
-	public ResponseEntity<Long> findPersonByEmailAndPassword(@RequestBody Person person) {
+	public ResponseEntity<Person> findPersonByEmailAndPassword(@RequestBody Person person) {
 		
 		Optional<Person> personFound = personService.findByEmailAndPassword(person.getEmail(), person.getPassword());
-		return new ResponseEntity<Long>(personFound.get().getId(), HttpStatus.FOUND);
+		return new ResponseEntity<Person>(personFound.get(), HttpStatus.FOUND);
 	}
 
 	//controlleur pour l'ajout d'un nouvel utilisateur
