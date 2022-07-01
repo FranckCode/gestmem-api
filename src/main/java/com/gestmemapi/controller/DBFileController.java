@@ -35,16 +35,16 @@ public class DBFileController {
     private DBFileService dbFileService;
 
     @PostMapping("/upload")
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
         try {
-            dbFileService.store(file);
+            DBFile dbFile =  dbFileService.store(file);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(message));
+            return ResponseEntity.status(HttpStatus.CREATED).body(dbFile.getId().toString());
             
         } catch (Exception e) {
             message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
     }
 
