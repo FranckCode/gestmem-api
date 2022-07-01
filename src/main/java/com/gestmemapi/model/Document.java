@@ -42,18 +42,11 @@ public class Document implements Serializable{
 	@Column(name = "SUMMARY", insertable=true, updatable = true, nullable=false)
 	private String summary;
 
-    @Column(name = "NAME", unique=true, insertable=true, updatable=true, nullable=false)
-    private String name;
-
-    @Lob
-	@Column(name = "DATA", insertable=true, updatable=true, nullable=false)
-    private byte[] data;
-
-    @Column(name = "TYPE", insertable=true, updatable = true, nullable=false)
-	private String type;
-
-    @Column(name = "SIZE", insertable=true, updatable = true, nullable=false)
-	private Long size;
+    @ManyToOne(
+		// cascade = CascadeType.ALL
+    )
+	@JoinColumn(name="file_id")
+	private DBFile file;
 
 	@ManyToOne(
 		// cascade = CascadeType.ALL
@@ -78,65 +71,49 @@ public class Document implements Serializable{
         System.out.println("Constructeur numero 1 de la classe document");
     }
     
-    public Document(Long id, Integer isValidated, Integer isPublished, String title, String summary, String name,
-            byte[] data) {
+    public Document(Long id, Integer isValidated, Integer isPublished, String title, String summary) {
         this.id = id;
         this.isValidated = isValidated;
         this.isPublished = isPublished;
         this.title = title;
         this.summary = summary;
-        this.name = name;
-        this.data = data;
-        this.size = Long.valueOf(1);
         System.out.println("Constructeur numero 2 de la classe document");
     }
     
-    public Document(String title, String summary, String name, String type, Person student, Person supervisor,
+    public Document(String title, String summary, Person student, Person supervisor,
             Speciality speciality) {
         this.title = title;
         this.summary = summary;
-        this.name = name;
-        this.type = type;
         this.student = student;
         this.supervisor = supervisor;
         this.speciality = speciality;
-        this.size = Long.valueOf(1);
         System.out.println("Constructeur numero 3 de la classe document");
     }
 
-    public Document(String title, String summary, String name, byte[] data, String type, Person student, Person supervisor,
+    /*public Document(String title, String summary, Person student, Person supervisor,
             Speciality speciality) {
         this.title = title;
         this.summary = summary;
-        this.name = name;
-        this.data = data;
-        this.type = type;
         this.student = student;
         this.supervisor = supervisor;
         this.speciality = speciality;
-        this.size = Long.valueOf(data.length);
         Long millis = System.currentTimeMillis();
         this.addedDate = new Date(millis);
         this.updatedDate = new Date(millis);
-        this.size = Long.valueOf(this.data.length);
         this.isPublished = 0;
         this.isValidated = 0;
         System.out.println("Constructeur numero 4 de la classe document");
-    }
+    }*/
 
     public Document(Document document){
         this.title = document.getTitle();
         this.summary = document.getSummary();
-        this.name = document.getName();
-        this.data = document.getData();
-        this.type = document.getType();
         this.student = document.getStudent();
         this.supervisor = document.getSupervisor();
         this.speciality = document.getSpeciality();
         Long millis = System.currentTimeMillis();
         this.addedDate = new Date(millis);
         this.updatedDate = new Date(millis);
-        this.size = Long.valueOf(data.length);
         this.isPublished = 0;
         this.isValidated = 0;
         System.out.println("Constructeur numero 5 de la classe document");
@@ -198,20 +175,12 @@ public class Document implements Serializable{
         this.summary = summary;
     }
 
-    public String getName() {
-        return name;
+    public DBFile getFile() {
+        return file;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
+    public void setFile(DBFile file) {
+        this.file = file;
     }
 
     public Person getStudent() {
@@ -238,28 +207,11 @@ public class Document implements Serializable{
         this.speciality = speciality;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
     @Override
     public String toString() {
         return "Document [addedDate=" + addedDate + ", id=" + id + ", isPublished=" + isPublished + ", isValidated="
-                + isValidated + ", name="  + name  + ", data="  + data + ", size=" + size + ", speciality=" + speciality + ", student="
-                + student + ", summary=" + summary + ", supervisor=" + supervisor + ", title=" + title + ", type="
-                + type + ", updatedDate=" + updatedDate + "]";
+                + isValidated +", speciality=" + speciality + ", student="
+                + student + ", summary=" + summary + ", supervisor=" + supervisor + ", title=" + title + ", updatedDate=" + updatedDate + "]";
     }
     
     

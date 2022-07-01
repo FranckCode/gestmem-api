@@ -61,7 +61,7 @@ public class DocumentController {
 	//@PostMapping(value="/documents", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     @PostMapping(value = "/document", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     @Transactional
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestBody Document document){
+    public ResponseEntity<ResponseMessage> saveDocument(@RequestBody Document document){
 
         System.out.println("upload file controller");
         
@@ -85,15 +85,15 @@ public class DocumentController {
             System.out.println(document);
             
 
-            Document uploadedDocument = documentService.store(document);
+            Document uploadedDocument = documentService.saveOrUpdateDocument(document);
 
-            message = "Uploaded the file successfully: " + document.getName();
+            message = "Uploaded the document successfully: " + document.getTitle();
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 
           } catch (IOException e) {
 
-            message = "Could not upload the file: " + document.getName() + "!" + e.toString();
+            message = "Could not upload the document: " + document.getTitle() + "!" + e.toString();
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
 
           }
@@ -155,40 +155,15 @@ public class DocumentController {
 
 
     @GetMapping("/documents")
-    public ResponseEntity<List<ResponseFile>> getListDocuments() {
-        List<ResponseFile> documents = documentService.getAllDocuments().map(dbFile -> {
-            String fileDownloadUri = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/")
-                .path(dbFile.getId().toString())
-                .toUriString();
-            /*return new ResponseFile(
-                dbFile.getName(),
-                fileDownloadUri,
-                dbFile.getType(),
-                Long.valueOf(dbFile.getData().length));*/
-
-            return new ResponseFile(dbFile.getId(), dbFile.getIsValidated(), dbFile.getIsPublished(), dbFile.getAddedDate(), dbFile.getUpdatedDate(), dbFile.getTitle(), dbFile.getSummary(), dbFile.getName(), dbFile.getType(), dbFile.getSize(), fileDownloadUri, dbFile.getStudent(), dbFile.getSupervisor(), dbFile.getSpeciality());
-            
-        }).collect(Collectors.toList());
+    public ResponseEntity<Iterable<Document>> getListDocuments() {
+        Iterable<Document> documents = documentService.getAllDocuments();
         return ResponseEntity.status(HttpStatus.OK).body(documents);
     }
 
 
     @GetMapping("/document")
-    public ResponseEntity<ResponseFile> getDocumentById(@RequestParam int id) {
-        Document document = documentService.getDocument(Long.valueOf(id));
-
-        String fileDownloadUri = ServletUriComponentsBuilder
-            .fromCurrentContextPath()
-            .path("/")
-            .path(document.getId().toString())
-            .toUriString();
-
-        ResponseFile responseFile = new ResponseFile();
-        responseFile.setName(document.getName());
-        responseFile.setTitle(document.getTitle());
-        responseFile.setUrl(fileDownloadUri);
+    public ResponseEntity<Document> getDocumentById(@RequestParam int id) {
+        Document document = documentService.getDocument(Long.valueOf(id)).get();
 
         /*
         return ResponseEntity.ok()
@@ -197,7 +172,7 @@ public class DocumentController {
                 .body(new ByteArrayResource(document.getData()));
         */
 
-        return new ResponseEntity<ResponseFile>(responseFile, HttpStatus.FOUND);
+        return new ResponseEntity<Document>(document, HttpStatus.OK);
     }
         
 }

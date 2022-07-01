@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.gestmemapi.controller.DocumentController;
+import com.gestmemapi.dao.DBFileRepository;
 import com.gestmemapi.dao.DocumentRepository;
 import com.gestmemapi.dao.PersonRepository;
 import com.gestmemapi.dao.SpecialityRepository;
 import com.gestmemapi.exception.BusinessResourceException;
+import com.gestmemapi.model.DBFile;
 import com.gestmemapi.model.Document;
 import com.gestmemapi.model.Person;
 import com.gestmemapi.model.ResponseMessage;
@@ -35,11 +38,16 @@ public class DocumentService implements IDocumentService {
   @Autowired
   private DocumentRepository documentRepository;
 
+  @Autowired
+  private DBFileRepository dbFileRepository;
+
+  @Autowired
   private PersonRepository personRepository;
 
+  @Autowired
   private SpecialityRepository specialityRepository; 
 
-  public DocumentService() {
+  /*public DocumentService() {
 		super();
 	}
 	
@@ -49,9 +57,58 @@ public class DocumentService implements IDocumentService {
 		this.documentRepository = documentRepository;
 		this.personRepository = personRepository;
     this.specialityRepository = specialityRepository;
-	}
+	}*/
 
   @Override
+	@Transactional(readOnly=false)
+	public Document saveOrUpdateDocument(Document document) throws IOException{
+		try{
+
+			if(null == document.getId()) {
+				//pas d'Id --> création d'un document
+				addDocumentStudent(document);
+				addDocumentSupervisor(document);
+				addDocumentSpeciality(document);
+
+				Long millis = System.currentTimeMillis();
+				document.setAddedDate(new Date(millis));
+				document.setUpdatedDate(new Date(millis));
+				document.setIsPublished(0);
+				document.setIsValidated(0);
+
+			} else {
+				//sinon, mise à jour d'un document
+				Optional<Document> documentFromDB = getDocument(document.getId());
+
+				Optional<DBFile> fileFromDb = dbFileRepository.findById(((DBFile) documentFromDB.get().getFile()).getId());
+				Optional<Person> studentFromDb = personRepository.findById(((Person) documentFromDB.get().getStudent()).getId());
+				Optional<Person> supervisorFromDb = personRepository.findById(((Person) documentFromDB.get().getSupervisor()).getId());
+				Optional<Speciality> specialityFromDb = specialityRepository.findById(((Speciality) documentFromDB.get().getSpeciality()).getId());
+
+				Long millis = System.currentTimeMillis();
+				document.setUpdatedDate(new Date(millis));
+				document.setFile(fileFromDb.get());
+				document.setStudent(studentFromDb.get());
+				document.setSupervisor(supervisorFromDb.get());
+				document.setSpeciality(specialityFromDb.get());
+			}
+
+			Document result = documentRepository.save(document);
+			return  result;
+
+		} catch(DataIntegrityViolationException ex){
+			logger.error("Utilisateur non existant", ex);
+			throw new BusinessResourceException("DuplicateValueError", "Un document existe déjà avec le compte : "+document.getTitle(), HttpStatus.CONFLICT);
+		} catch (BusinessResourceException e) {
+			logger.error("Utilisateur non existant", e);
+			throw new BusinessResourceException("PersonNotFound", "Aucun document avec l'identifiant: "+document.getTitle(), HttpStatus.NOT_FOUND);
+		} catch(Exception ex){
+			logger.error("Erreur technique de création ou de mise à jour de l'utilisateur", ex);
+			throw new BusinessResourceException("SaveOrUpdatePersonError", "Erreur technique de création ou de mise à jour de l'utilisateur: "+document.getTitle(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+  /*@Override
   @Transactional(readOnly = false)
   public Document store(Document document) throws IOException {
 
@@ -81,7 +138,7 @@ public class DocumentService implements IDocumentService {
 			throw new BusinessResourceException("StoreDocummentError", "Erreur technique de création du document: "+document.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-  }  
+  }*/  
 
   //fonction pour l'attribution du role student à l'utilisateur de type student
 	private void addDocumentSpeciality(Document document) {
@@ -118,13 +175,13 @@ public class DocumentService implements IDocumentService {
 	}
 
   @Override
-  public Document getDocument(Long id) {
-    return documentRepository.findById(id).get();
+  public Optional<Document> getDocument(Long id) {
+    return documentRepository.findById(id);
   }
 
   @Override
-  public Stream<Document> getAllDocuments() {
-    return documentRepository.findAll().stream();
+  public Iterable<Document> getAllDocuments() {
+    return documentRepository.findAll();
   }
 
 }
