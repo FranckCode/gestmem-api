@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class PersonService implements IPersonService {
 	
 	@Override
 	public Iterable<Person> getAllPersons() {
-		return personRepository.findAll();
+		return personRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 	}	
 	
 
@@ -130,6 +131,6 @@ public class PersonService implements IPersonService {
 	@Override
 	public void deletePerson(Long id) throws BusinessResourceException {
 		// TODO Auto-generated method stub
-		personRepository.deleteById(id);
+		
 	}	
 }
