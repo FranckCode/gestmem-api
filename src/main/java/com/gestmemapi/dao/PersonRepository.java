@@ -17,4 +17,6 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
     Iterable<Person> findAllByRole(Role role);
 
+    Iterable<Person> findAllByPersonActive(Integer personActive);
+
 }

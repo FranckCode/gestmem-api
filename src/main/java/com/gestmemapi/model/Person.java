@@ -78,6 +78,17 @@ public class Person implements Serializable{
         this.personActive = personActive;
     }
 
+    public Person(Person person) {
+        this.id = person.getId();
+		this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
+        this.matricule = person.getMatricule();
+        this.email = person.getEmail();
+        this.password = person.getPassword();
+        this.personActive = person.getPersonActive();
+        this.role = person.getRole();
+    }
+
     public Long getId() {
         return id;
     }

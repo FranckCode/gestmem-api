@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,9 +43,31 @@ public class PersonController {
 	//controlleur pour l'ajout d'un nouvel utilisateur
 	@PostMapping(value = "/person")
 	@Transactional
-	public ResponseEntity<Person> saveUser(@RequestBody Person person) {
-		Person personSaved = personService.saveOrUpdatePerson(person);		
- 		return new ResponseEntity<Person>(personSaved, HttpStatus.CREATED);
+	public ResponseEntity<ResponseMessage> saveUser(@RequestBody Person person) {
+		String message = "";
+		 try{
+
+			Person personSaved = personService.saveOrUpdatePerson(person);		
+ 			//return new ResponseEntity<Person>(personSaved, HttpStatus.CREATED);
+
+			message = "Created the user successfully: " + person.getEmail();
+
+			return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(message));
+
+		}
+		catch(DataIntegrityViolationException ex){
+			message = "Un utilisateur existe déjà avec le compte : "+person.getEmail() + " ! " + ex.toString();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage(message));
+		}
+		catch (BusinessResourceException ex) {
+			message = "Aucun utilisateur avec l'identifiant: " + person.getEmail() + " ! " + ex.toString();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage(message));
+		}
+		catch(BusinessResourceException ex){
+			message = "Erreur technique de création ou de mise à jour de l'utilisateur" + person.getEmail() + " ! " + ex.toString();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(message));
+		}
+
  	}
 
 	// controller pour la mise à jour d'un utilisateur

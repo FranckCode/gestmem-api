@@ -39,14 +39,14 @@ public class PersonService implements IPersonService {
 	
 	@Override
 	public Iterable<Person> getAllPersons() {
-		return personRepository.findAll();
+		return personRepository.findAllByPersonActive(1);
 	}	
 	
 
 	@Override
 	@Transactional(readOnly=false)
 	public Person saveOrUpdatePerson(Person person) throws BusinessResourceException{
-		try{
+		//try{
 			if(null == person.getId()) {
 				//pas d'Id --> création d'une Person
 				addPersonRole(person);	//Ajout d'un rôle par défaut
@@ -65,7 +65,7 @@ public class PersonService implements IPersonService {
 			}
 			Person result = personRepository.save(person);
 			return  result;
-		} catch(DataIntegrityViolationException ex){
+		/*} catch(DataIntegrityViolationException ex){
 			logger.error("Utilisateur non existant", ex);
 			throw new BusinessResourceException("DuplicateValueError", "Un utilisateur existe déjà avec le compte : "+person.getEmail(), HttpStatus.CONFLICT);
 		} catch (BusinessResourceException e) {
@@ -74,7 +74,7 @@ public class PersonService implements IPersonService {
 		} catch(Exception ex){
 			logger.error("Erreur technique de création ou de mise à jour de l'utilisateur", ex);
 			throw new BusinessResourceException("SaveOrUpdatePersonError", "Erreur technique de création ou de mise à jour de l'utilisateur: "+person.getEmail(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		}*/
 	}
 
 	//fonction pour l'attribution du role student à l'utilisateur de type student
@@ -130,6 +130,16 @@ public class PersonService implements IPersonService {
 	@Override
 	public void deletePerson(Long id) throws BusinessResourceException {
 		// TODO Auto-generated method stub
-		personRepository.deleteById(id);
+		//personRepository.deleteById(id);
+
+		Optional<Person> PersonFromDB = getPersonById(id);
+
+		Person person = new Person(PersonFromDB.get());
+		person.setPersonActive(0);
+	
+		Person result = personRepository.save(person);
+		//return  result;
+
+
 	}	
 }

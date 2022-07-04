@@ -101,10 +101,10 @@ public class DocumentService implements IDocumentService {
 			throw new BusinessResourceException("DuplicateValueError", "Un document existe déjà avec le compte : "+document.getTitle(), HttpStatus.CONFLICT);
 		} catch (BusinessResourceException e) {
 			logger.error("Utilisateur non existant", e);
-			throw new BusinessResourceException("PersonNotFound", "Aucun document avec l'identifiant: "+document.getTitle(), HttpStatus.NOT_FOUND);
+			throw new BusinessResourceException("DocumentNotFound", "Aucun document avec l'identifiant: "+document.getTitle(), HttpStatus.NOT_FOUND);
 		} catch(Exception ex){
 			logger.error("Erreur technique de création ou de mise à jour de l'utilisateur", ex);
-			throw new BusinessResourceException("SaveOrUpdatePersonError", "Erreur technique de création ou de mise à jour de l'utilisateur: "+document.getTitle(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new BusinessResourceException("SaveOrUpdateDocumentError", "Erreur technique de création ou de mise à jour du document: "+document.getTitle(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
