@@ -158,20 +158,13 @@ public class DocumentController {
     public ResponseEntity<Iterable<Document>> getListDocuments() {
         Iterable<Document> documents = documentService.getAllDocuments();
         return ResponseEntity.status(HttpStatus.OK).body(documents);
+
     }
 
 
     @GetMapping("/document")
     public ResponseEntity<Document> getDocumentById(@RequestParam int id) {
         Document document = documentService.getDocument(Long.valueOf(id)).get();
-
-        /*
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(document.getType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename= "+document.getName())
-                .body(new ByteArrayResource(document.getData()));
-        */
-
         return new ResponseEntity<Document>(document, HttpStatus.OK);
     }
         

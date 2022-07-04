@@ -21,7 +21,7 @@ public class DBFile implements Serializable{
 	@Column(name = "DBFILE_ID", updatable = false, nullable = false)
 	private Long id;
 	
-	@Column(name = "DBFILE_NAME", unique=true, insertable=true, updatable=true, nullable=false)
+	@Column(name = "NAME", insertable=true, updatable=true, nullable=false)
     private String name;
 
     @Lob

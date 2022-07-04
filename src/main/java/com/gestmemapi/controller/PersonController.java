@@ -63,7 +63,7 @@ public class PersonController {
 			message = "Aucun utilisateur avec l'identifiant: " + person.getEmail() + " ! " + ex.toString();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage(message));
 		}
-		catch(BusinessResourceException ex){
+		catch(Exception ex){
 			message = "Erreur technique de création ou de mise à jour de l'utilisateur" + person.getEmail() + " ! " + ex.toString();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(message));
 		}

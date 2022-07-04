@@ -68,7 +68,6 @@ public class Document implements Serializable{
 
     public Document() {
     	super();
-        System.out.println("Constructeur numero 1 de la classe document");
     }
     
     public Document(Long id, Integer isValidated, Integer isPublished, String title, String summary) {
@@ -77,7 +76,6 @@ public class Document implements Serializable{
         this.isPublished = isPublished;
         this.title = title;
         this.summary = summary;
-        System.out.println("Constructeur numero 2 de la classe document");
     }
     
     public Document(String title, String summary, Person student, Person supervisor,
@@ -87,7 +85,6 @@ public class Document implements Serializable{
         this.student = student;
         this.supervisor = supervisor;
         this.speciality = speciality;
-        System.out.println("Constructeur numero 3 de la classe document");
     }
 
     /*public Document(String title, String summary, Person student, Person supervisor,
@@ -116,7 +113,6 @@ public class Document implements Serializable{
         this.updatedDate = new Date(millis);
         this.isPublished = 0;
         this.isValidated = 0;
-        System.out.println("Constructeur numero 5 de la classe document");
     }
 
     public Long getId() {

@@ -22,7 +22,7 @@ public class Comment implements Serializable{
 	@Column(name = "COMMENT_ID", updatable = false, nullable = false)
 	private Long id;
 	
-	@Column(name="COMMENT_DESCRIPTION", updatable = true, nullable = false)
+	@Column(name="DESCRIPTION", updatable = true, nullable = false)
 	private String commentDescription;
 
     @ManyToOne(
