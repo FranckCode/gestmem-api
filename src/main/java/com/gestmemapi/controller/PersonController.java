@@ -37,7 +37,7 @@ public class PersonController {
 	public ResponseEntity<Person> findPersonByEmailAndPassword(@RequestBody Person person) {
 		
 		Optional<Person> personFound = personService.findByEmailAndPassword(person.getEmail(), person.getPassword());
-		return new ResponseEntity<Person>(personFound.get(), HttpStatus.FOUND);
+		return new ResponseEntity<Person>(personFound.get(), HttpStatus.OK);
 	}
 
 	//controlleur pour l'ajout d'un nouvel utilisateur
@@ -74,7 +74,7 @@ public class PersonController {
 	@PutMapping(value = "/person")
 	public ResponseEntity<Person> updateUser(@RequestBody Person person) {
 		Person personSaved = personService.saveOrUpdatePerson(person);		
-		return new ResponseEntity<Person>(personSaved, HttpStatus.CREATED);
+		return new ResponseEntity<Person>(personSaved, HttpStatus.OK);
 	}
 	  
 	//controlleur pour la récupération de tous les utilisateurs
@@ -88,7 +88,7 @@ public class PersonController {
 	@GetMapping(value = "/person")
 	public ResponseEntity<Optional<Person>> getUserById(@RequestParam int id) {
 		Optional<Person> myPerson = personService.getPersonById(Long.valueOf(id));
-		return new ResponseEntity<Optional<Person>>(myPerson, HttpStatus.FOUND);
+		return new ResponseEntity<Optional<Person>>(myPerson, HttpStatus.OK);
 	}
 
 	//controlleur pour la récupération de tous les utilisateurs

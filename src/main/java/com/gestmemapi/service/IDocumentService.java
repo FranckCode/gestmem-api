@@ -14,4 +14,21 @@ public interface IDocumentService {
     Optional<Document> getDocument(Long id);
 
     Iterable<Document> getAllDocuments();
+
+    Iterable<Document> getAllSupervisorDocuments(Long id);
+
+    Iterable<Document> getAllStudentDocuments(Long id);
+
+    Iterable<Document> getAllValidatedDocuments();
+
+    Iterable<Document> getAllPublishedDocuments();
+
+    void publishDocument(Long id);
+
+    void validateDocument(Long id);
+
+    void unPublishDocument(Long id);
+
+    void unValidateDocument(Long id);
+
 }

@@ -60,7 +60,7 @@ public class DocumentService implements IDocumentService {
     this.specialityRepository = specialityRepository;
 	}*/
 
-  @Override
+  	@Override
 	@Transactional(readOnly=false)
 	public Document saveOrUpdateDocument(Document document) throws IOException{
 		try{
@@ -175,23 +175,91 @@ public class DocumentService implements IDocumentService {
 		}
 	}
 
-  @Override
-  public Optional<Document> getDocument(Long id) {
-    Optional<Document> document = documentRepository.findById(id);
-	document.get().getFile().setData(null);
-	return document;
-  }
+	@Override
+	public Optional<Document> getDocument(Long id) {
+		Optional<Document> document = documentRepository.findById(id);
+		document.get().getFile().setData(null);
+		return document;
+	}
+	
 
-  @Override
-  public Iterable<Document> getAllDocuments() {
-    Iterable<Document> documents = documentRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-
-	for (Document document : documents) {
-		document.getFile().setData(null);
+	@Override
+	public Iterable<Document> getAllDocuments() {
+		Iterable<Document> documents = documentRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		for (Document document : documents) {
+			document.getFile().setData(null);
+		}
+		return documents;
 	}
 
-	return documents;
+	
 
-  }
+	@Override
+	public void publishDocument(Long id) {
+		Document document = documentRepository.findById(id).get();
+		document.setIsPublished(1);
+		Document result = documentRepository.save(document);
+	}
+	
 
+	@Override
+	public void unPublishDocument(Long id) {
+		Document document = documentRepository.findById(id).get();
+		document.setIsPublished(0);
+		Document result = documentRepository.save(document);
+	}
+
+	@Override
+	public void unValidateDocument(Long id) {
+		Document document = documentRepository.findById(id).get();
+		document.setIsValidated(0);
+		Document result = documentRepository.save(document);
+	}
+
+	@Override
+	public void validateDocument(Long id) {
+		Document document = documentRepository.findById(id).get();
+		document.setIsValidated(1);
+		Document result = documentRepository.save(document);
+	}
+
+	
+	@Override
+	public Iterable<Document> getAllPublishedDocuments() {
+		Iterable<Document> documents = documentRepository.findAllByIsPublished(1, Sort.by(Sort.Direction.DESC, "id"));
+		for (Document document : documents) {
+			document.getFile().setData(null);
+		}
+		return documents;
+	}
+	
+	@Override
+	public Iterable<Document> getAllValidatedDocuments() {
+		Iterable<Document> documents = documentRepository.findAllByIsValidated(1, Sort.by(Sort.Direction.DESC, "id"));
+		for (Document document : documents) {
+			document.getFile().setData(null);
+		}
+		return documents;
+	}
+
+	@Override
+	public Iterable<Document> getAllStudentDocuments(Long id) {
+		Optional<Person> student = personRepository.findById(id);
+		Iterable<Document> documents = documentRepository.findAllByStudent(student.get(), Sort.by(Sort.Direction.DESC, "id"));
+		for (Document document : documents) {
+			document.getFile().setData(null);
+		}
+		return documents;
+	}
+
+	@Override
+	public Iterable<Document> getAllSupervisorDocuments(Long id) {
+		Optional<Person> supervisor = personRepository.findById(id);
+		Iterable<Document> documents = documentRepository.findAllBySupervisor(supervisor.get(), Sort.by(Sort.Direction.DESC, "id"));
+		for (Document document : documents) {
+			document.getFile().setData(null);
+		}
+		return documents;
+	}
+	
 }

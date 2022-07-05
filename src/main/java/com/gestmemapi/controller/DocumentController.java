@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -161,6 +162,34 @@ public class DocumentController {
 
     }
 
+    @GetMapping("/documents-student")
+    public ResponseEntity<Iterable<Document>> getListStudentDocuments(@RequestParam int id) {
+        Iterable<Document> documents = documentService.getAllStudentDocuments(Long.valueOf(id));
+        return ResponseEntity.status(HttpStatus.OK).body(documents);
+
+    }
+
+    @GetMapping("/documents-supervisor")
+    public ResponseEntity<Iterable<Document>> getListSupervisorDocuments(@RequestParam int id) {
+        Iterable<Document> documents = documentService.getAllSupervisorDocuments(Long.valueOf(id));
+        return ResponseEntity.status(HttpStatus.OK).body(documents);
+
+    }
+
+    @GetMapping("/documents-published")
+    public ResponseEntity<Iterable<Document>> getListPublishedDocuments() {
+        Iterable<Document> documents = documentService.getAllPublishedDocuments();
+        return ResponseEntity.status(HttpStatus.OK).body(documents);
+
+    }
+
+    @GetMapping("/documents-validated")
+    public ResponseEntity<Iterable<Document>> getListValidatedDocuments() {
+        Iterable<Document> documents = documentService.getAllValidatedDocuments();
+        return ResponseEntity.status(HttpStatus.OK).body(documents);
+
+    }
+
 
     @GetMapping("/document")
     public ResponseEntity<Document> getDocumentById(@RequestParam int id) {
@@ -168,4 +197,41 @@ public class DocumentController {
         return new ResponseEntity<Document>(document, HttpStatus.OK);
     }
         
+    // controller pour publier un document
+	@PutMapping(value = "/document-publish")
+	public ResponseEntity<ResponseMessage> publishADocument(@RequestParam int id) {
+		documentService.publishDocument(Long.valueOf(id));	
+
+		String message = "Document published successfully ";
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+	}
+
+    // controller pour depublier un document
+	@PutMapping(value = "/document-unpublish")
+	public ResponseEntity<ResponseMessage> unPublishADocument(@RequestParam int id) {
+		documentService.unPublishDocument(Long.valueOf(id));	
+
+		String message = "Document unPublished successfully ";
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+	}
+
+    // controller pour valider un document
+	@PutMapping(value = "/document-validate")
+	public ResponseEntity<ResponseMessage> validateADocument(@RequestParam int id) {
+		documentService.validateDocument(Long.valueOf(id));	
+
+		String message = "Document validated successfully ";
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+	}
+
+    // controller pour devalider un document
+	@PutMapping(value = "/document-unvalidate")
+	public ResponseEntity<ResponseMessage> unValidateADocument(@RequestParam int id) {
+		documentService.unValidateDocument(Long.valueOf(id));	
+
+		String message = "Document unvalidated successfully ";
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+	}
+
+
 }

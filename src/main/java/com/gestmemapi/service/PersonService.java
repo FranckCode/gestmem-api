@@ -56,9 +56,11 @@ public class PersonService implements IPersonService {
 			} else {
 				//sinon, mise à jour d'une Person
 				Optional<Person> PersonFromDB = getPersonById(person.getId());
-				if(! bCryptPasswordEncoder.matches(person.getPassword(), PersonFromDB.get().getPassword())) {
+				if(!bCryptPasswordEncoder.matches(person.getPassword(), PersonFromDB.get().getPassword())) {
+					System.out.println("Update password");
 					person.setPassword(bCryptPasswordEncoder.encode(person.getPassword()));//MAJ du mot de passe s'il a été modifié
 				} else {
+					System.out.println("Repaste password");
 					person.setPassword(PersonFromDB.get().getPassword());//Sinon, on remet le password déjà haché
 				}
 				Optional<Role> roleFromBD = roleRepository.findById(((Role) PersonFromDB.get().getRole()).getId());
